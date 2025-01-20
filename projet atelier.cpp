@@ -48,3 +48,36 @@ TokenRingNetwork* create_token_ring_network(int num_stations) {
     return network;
 }
 
+// Fonction pour simuler une étape du réseau
+void simulate_step(TokenRingNetwork* network) {
+    Station* current_station = network->current_token_holder;
+
+    if (current_station->data_count > 0) {
+        printf("Station %d transmet des données: %d\n", current_station->id, current_station->data_to_send[0]);
+        for (int i = 0; i < current_station->data_count - 1; i++) {
+            current_station->data_to_send[i] = current_station->data_to_send[i + 1];
+        }
+        current_station->data_count--;
+    }
+
+    current_station->has_token = false;
+    current_station->next->has_token = true;
+    network->current_token_holder = current_station->next;
+    printf("Station %d passe le jeton à Station %d\n", current_station->id, current_station->next->id);
+}
+
+// Fonction pour ajouter des données à une station
+void add_data_to_station(TokenRingNetwork* network, int station_id, int data) {
+    if (station_id >= 0 && station_id < network->num_stations) {
+        Station* station = &network->stations[station_id];
+        if (station->data_count < 10) {
+            station->data_to_send[station->data_count] = data;
+            station->data_count++;
+            printf("Donnée %d ajoutée à la Station %d\n", data, station_id);
+        } else {
+            printf("La Station %d a trop de données en attente\n", station_id);
+        }
+    } else {
+        printf("Station %d invalide\n", station_id);
+    }
+}
