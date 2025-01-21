@@ -81,3 +81,24 @@ void add_data_to_station(TokenRingNetwork* network, int station_id, int data) {
         printf("Station %d invalide\n", station_id);
     }
 }
+int main() {
+    int num_stations = 5; // Nombre de stations dans le réseau
+    TokenRingNetwork* network = create_token_ring_network(num_stations);
+
+    // Ajouter des données aux stations
+    add_data_to_station(network, 0, 100);
+    add_data_to_station(network, 1, 200);
+    add_data_to_station(network, 3, 300);
+
+    // Simuler les étapes du réseau
+    for (int i = 0; i < 10; i++) {
+        printf("\nÉtape %d:\n", i + 1);
+        simulate_step(network);
+    }
+
+    // Libérer la mémoire
+    free(network->stations);
+    free(network);
+
+    return 0;
+}
